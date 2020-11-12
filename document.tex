@@ -1,0 +1,201 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{todonotes}
+
+\begin{document}
+	\section{Bevezetés}
+	A cikk három stratégiát tárgyal:
+	\begin{itemize}
+		\item meek(szelíd)
+		\item optimistic(optimista)
+		\item prudent(körültekintő)
+	\end{itemize}
+	A parkolót egy félegyenesnek tekintik ahol a cél a félegyenes vége ami az ábrák bal oldalán lesz, az autók pedig pontok amelyek egy állandó $\lambda$ mértékben jobbról érkeznek és egész értékekre parkolnak.Az autó leparkolásának idejét nem veszik figyelembe. A legérdekesebb eset amikor $\lambda$ nagyobb 1-nél és a parkoló autók száma nagy.
+	\begin{itemize}
+	\item A szelíd stratégia: a sorban parkoló utolsó autó után biztosan van egy szabad hely és azt el foglalja.
+	\item Az optimista stratégia: elmegy a célig, majd elindul visszafele és az első szabad helyre leparkol.
+	\item A körültekintő stratégia: feltételezi, hogy van szabad hely a sorban, elindul a cél fele és leparkol az első üres helyre.
+	\end{itemize}
+	Mindegyik stratégiának megvan az előnye és a hátránya. A szelíd stratégia hamar talál parkoló helyet, de sokat kell gyalogolnia, továbbá folyamatosan tolja jobbra a sort, mert balról mennek el az autók viszont csak jobbról kerülnek be a sorba és emiatt kihasználatlan a parkoló nagy része. Az optimista mindig a célhoz legközelebbi helyre parkol, de sok időt tölt el a parkolással. A körültekintő az első elérhető helyre parkol, de ha tele van a sor elmegy teljesen a végéig és vissza kell menjen, valamint ha van is hely valószínűleg nem a legközelebbi helyre parkol.
+	\section{Az autók dinamikája}
+	A parkolás alap jellemzője a parkoló autók száma $N(t)$ egy adott $t$ idő pillanatban. Ha eltekintünk a leparkolás idejétől, a véletlenszerű változó $N(t)$ független a parkolási stratégiától. A valószínűségi eloszlás $P_N(t)$ amelyre $N$ darab parkoló autó van a $t$ időben, a következő egyenlettel írható le
+	\begin{align}
+		\label{eq1}
+		\frac{dP_N}{dt} = \lambda P_{N-1}+(N+1)P_{N+1}-(\lambda + N)P_N
+	\end{align}
+	Az első kifejezés a jobb oldalon a $P_N$ növekedésért van jelen, ugyanis az $N$. autó parkolásakor $N-1$ autó van a parkolóban. A második kifejezés szintén, hiszen egy autó akkor hagyja el a parkolót amikor abban $N+1$ van. Az utolsó viszont már a csökkenésért, mert ha $N$ autó parkol egy adott pillanatban vagy parkolni fog egy autó vagy elmegy egy.
+	Az egyenlet (\ref{eq1}) megoldása megkapható generátor függvény segítségével. Ha kezdetben a parkoló üres, $P_N(0)=\delta_{N,0}$, a parkoló autók eloszlása a Poisson-eloszlást követ.
+	\begin{align}
+		\label{eq2}
+		P_N(t) = \frac{[\lambda (1-e^{-t})]^N}{N!}e^{-\lambda(1-e^{-t})}\xrightarrow[t\to\infty]{}\frac{\lambda^N}{N!}e^{-\lambda}
+	\end{align}
+	A (\ref{eq2}) egyenletből az autók átlagos száma $\langle N(t)\rangle = \lambda(1-e^{-t})$, ami hosszútávon $\lambda$-hoz közelít. A valós szám ingadozik az $\langle N \rangle = \lambda$ érték körül, $\sqrt{\langle N^2\rangle - \langle N\rangle^2} = \lambda$ szórással.\\
+	A parkoló kiürülésének az ideje meghatározható Kolmogorov-egyenlet segítségével.
+	\begin{align}
+		\label{eq3}
+		t_n=p_nt_{n+1}+q_nt_{n-1}+\delta t_n
+	\end{align}
+	A fenti egyenlet szerint $t_n$ idő alatt ürül ki a parkoló $n$ darab autó esetén. A jobb oldal első kifejezése az új autó leparkolását jelzi, aminek $p_n={\lambda}/{(\lambda+n)}$ esélye van. A második kifejezés egy autó kilépését jelzi a parkolóból, melynek esélye $q_n={n}/{(\lambda+n)}$.
+	Végezetül a $\delta t_n=1/{(\lambda+n)}$ kifejezés azt az időt jelzi amíg a parkoló autók száma eggyel nö vagy csökken.\\
+	A (\ref{eq3}) egyenlet megoldása, amikor $n$ darab autóra a következő:
+	\begin{align}
+		t_n=\frac{1}{\lambda}\sum_{j=0}^{n-1}\frac{j!}{\lambda!}\sum_{i \geqslant j}\frac{\lambda^i}{i!}
+	\end{align}
+	\section{A szelíd stratégia}
+	Ez a stratégia nem hatékony ha a parkoló forgalma magas, ugyanis a sor folyamatosan tolódik el jobbra es rengeteg el nem foglalt hely lesz a sor elején. Tekintsük a lefoglalt hely hosszát $l$-nek abban az esetben, ha $\lambda \rightarrow \infty$, ilyenkor annak az esélye, hogy egy $x$ távolságra parkol autó a legjobboldalibbtól $p(x)=e^{-x/\lambda}$. Ahhoz, hogy megbecsüljük ezt a távolságot felhasználjuk azt a tényt miszerint annak az esélye, hogy parkol autó a legjobboldalibbtól egy $l$ vagy nagyobb távolságra a következő:
+ 	\begin{align}
+		\sum_{x \geqslant l}e^{-\frac{x}{\lambda}} = \frac{e^{-\frac{l}{\lambda}}}{1-e^{-\frac{1}{\lambda}}} \simeq \lambda e^{-\frac{l}{\lambda}}
+	\end{align}
+	Ha ezt a mennyiséget megfeleltetjük egynek a következőt kapjuk: 
+	\begin{align}
+		l = \lambda \ln \lambda
+	\end{align}
+	Ebből látható, hogy a lefoglalt hely kicsi a parkoló méretéhez viszonyítva.
+	\section{A bizakodó stratégia}
+	Ennek a stratégiának a kulcsa, hogy bármely $i$ hely elfoglalása kizárólag az $1,2,...,i$ helyektől függ, az ettől jobbra helyezkedőek figyelmen kívül hagyhatóak.\\
+	Ha $\sigma_i$-vel jelöljük a $i$. hely elfoglaltsága, akkor ez a következő képpen néz ki:
+	\begin{align}
+		\sigma_i=
+		\begin{cases}
+			1 &\quad \text{ha $i$ foglalt,} \\
+			0 &\quad \text{ha $i$ szabad}
+		\end{cases}
+	\end{align}
+	Az autók sűrűsége $\rho_1=\langle\sigma_1\rangle$ az első helyen a következő egyenletet adja:
+	\begin{align}
+		\frac{d\rho_1}{dt} \equiv \rho_1 = \lambda(1-\rho_1)-\rho_1
+	\end{align}
+	miszerint ha a hely üres $\lambda$ sebességgel foglalódik el, míg ha  el van foglalva 1 sebességgel ürül ki. Ennek a megoldása:
+	\begin{align}
+		\rho_1=\frac{\lambda}{1+\lambda}[1-e^{-(1+\lambda)t}]\xrightarrow[t \to \infty]{}\frac{\lambda}{1+\lambda}
+	\end{align}
+	Ezen logika mentén haladva az autók sűrűsége egy $k \geqslant 2$ helyen a következő egyenletet adja:
+	\begin{align}
+		\label{eq4}
+		\dot{\rho}_k=\lambda \langle(1-\sigma_k)\prod_{j=1}^{k-1}\sigma_j \rangle - \rho_k
+	\end{align}
+	\subsection{k=2 esetén}
+	Ha $k=2$, a \ref{eq4} egyenlet a következő alakot ölti:
+	\begin{align*}
+		\dot{\rho}_2 &= \lambda\rho_1-\rho_2-\lambda\langle\sigma_1\sigma_2\rangle=\lambda\rho_1-\rho-\lambda\rho_{12}\\
+		\dot{\rho}_{12}&=\lambda\langle(1-\sigma_1)\sigma_2\rangle+\lambda\langle\rho_1(1-\rho_2)\rangle-2\rho_{12}=\lambda(\rho_1+\rho_2)-2(1+\lambda)\rho_{12}
+	\end{align*}
+	ahol $p_{12} \equiv \langle\sigma_1\sigma_2\rangle$.\\
+	A teljes időfüggő megoldást ezekre egyenletek elemi, de nehézkes. Az állandó helyzetben:
+	\begin{align*}
+		0&=\lambda\rho_1-\rho_2-\lambda\rho_{12}\\
+		0&=\lambda(\rho_1+\rho_2)-2(1+\lambda)\rho_{12}
+	\end{align*}
+	amiből következik:
+	\begin{align*}
+		\rho_{12}&=\frac{\lambda^2}{\lambda^2+2\lambda+2}\\
+		\frac{\rho_2}{\rho_{12}} &= \frac{\lambda+2}{\lambda+1}
+	\end{align*}
+	\subsection{k=3 esetén}
+	Az egyenlet sűrűségre a harmadik helyen:
+	\begin{align}
+		\dot{\rho}_3=\lambda(\rho_{12}-\rho_{123})-\rho_3
+	\end{align}
+	ami magában foglalja a $\rho_{123}=\langle\sigma_1\sigma_2\sigma_3\rangle$ átlagot, ami teljesíti a következő egyenletet
+	\begin{align}
+		\label{eq5}
+		\dot{\rho}_{123}&=\lambda\langle(1-\sigma_1)\sigma_2\sigma_3\rangle+\lambda\langle\sigma_1(1-\sigma_2)\sigma_3\rangle+\lambda\langle\sigma_1\sigma_2(1-\sigma_3)\rangle-3\rho_{123}\nonumber\\
+		&=\lambda(\rho_{12}+\rho_{23}+\rho_{13})-3(1+\lambda)\rho_{123}
+	\end{align}
+	Az előző esetből tudjuk $\rho_{12}=\langle\sigma_1\sigma_2\rangle$, $\rho_{13}=\langle\sigma_1\sigma_3\rangle$ és $\rho_{23}=\langle\sigma_2\sigma_3\rangle$, amiből következik:
+	\begin{align}
+		\label{eq6}
+		\dot{\rho}_{13}&=\lambda\langle(1-\rho_1)\rho_3\rangle+\lambda\langle\rho_1\rho_2(1-\rho_3)\rangle-2\rho_{13}\nonumber\\
+		&=\lambda(\rho_3+\rho_{12}-\rho_{123})-(2+\lambda)\rho_{23}\nonumber\\
+		\dot{\rho}_{23}&=\lambda\langle\sigma_1(1-\sigma_2)\sigma_3\rangle+\lambda\langle\sigma_1\sigma_2(1-\sigma_3)\rangle-2\rho{23}\nonumber\\
+		&=\lambda(\rho_{13}+\rho_{12}-2\rho{123})-2\rho{23}
+	\end{align}
+	Megoldva az (\ref{eq5}) és (\ref{eq6}) egyenleteket, a következőt kapjuk:
+	\begin{align}
+		\rho_{123}=\frac{\lambda^3}{\lambda^3+3\lambda^2+6\lambda+6}
+	\end{align}
+	a mennyiségek függvényében a többi sűrűség a következőképpen adható meg:
+	\begin{align*}
+		\frac{\rho_3}{\rho_{123}}&=\frac{\lambda^2+4\lambda+6}{\lambda^2+2\lambda+2}\\
+		\frac{\rho_3}{\rho_{123}}&=\frac{\lambda+3}{\lambda+2}\\
+		\frac{\rho_{13}}{\rho_{123}}&=\frac{(\lambda+1)(\lambda^2+4\lambda+6)}{(\lambda+2)(\lambda^2+2\lambda+2)}
+	\end{align*}
+	\subsection{Csonkító közelítés}
+	A pontos megoldások hamar bonyolulttá válnak, viszont egyszerűsíthetők közelítéssel felhasználva, hogy $\rho_{12}=\rho_1\rho_2$. Ekkor a következőt kapjuk: 
+	\begin{align*}
+		\rho_2^{MF}&=\frac{\lambda^2}{\lambda^2+\lambda+1}\\
+		\rho_{12}^{MF}&=\frac{\lambda^3}{(\lambda^2+\lambda+1)(\lambda+1)}
+	\end{align*}
+	ahol $MF$ a középmező(mean-field) sűrűséget jelöli. Ugyan ezt alkalmazva a $\rho_{12}=\rho_1\rho_2$ és $\rho_{123}=\rho_1\rho_2\rho_3$ megkapjuk, hogy:
+	\begin{align}
+		\rho_3^{MF}=\frac{\lambda^4}{\lambda^4+\lambda^3+2\lambda^2+2\lambda+1}
+	\end{align}
+	Ez a módszer annál közelebb van a valós értékekhez minél nagyobb a forgalom.
+	\subsection{Viselkedés nagy k-ra}
+	Mivel a többoldali korreláció nehézkes és a csonkító közelítés eléggé pontos nagy forgalom esetén, fókuszáljunk a nagy k viselkedésére közelítéssel. Így a stabil állapotra megkapjuk, hogy:
+	\begin{align}
+		\rho_{k+1}=\frac{\lambda \prod\limits_{j=1}^{k} \rho_j}{1+\lambda\prod\limits_{ j=1 }^{ k } \rho_j}
+	\end{align}
+	ami leegyszerűsíthető:
+	\begin{align}
+		\rho_{k+1}=\frac{\rho_k^2}{1-\rho_k+\rho_k^2}
+	\end{align}
+	Kezdve $\rho_1=\lambda/(1+\lambda)$-tól, lépkedve haladva, eljutunk:
+	\begin{align}
+		n_{k+1}-n_k=\epsilon n_k^2\left[1-\frac{\epsilon^2n_k^2}{1-\epsilon n_k+\epsilon^2n_k^2}\right]
+	\end{align}
+	ahol $\epsilon=1/(1+\lambda)$ és az eredmény az $1-\rho_k = \epsilon n_k$ alakban van írva. Ahol ha kicseréljük a különbséget a következőt kapjuk:
+	\begin{align}
+		\frac{dn_k}{dk}=\epsilon n_k^2
+	\end{align}
+	aminek a megoldása, ha a határfeltétel $n_1=1$:
+	\begin{align}
+		\label{eq7}
+		n_k=\frac{1}{1-\epsilon(k-1)}=\frac{\lambda+1}{\lambda+2-k}
+	\end{align}
+	vagy
+	\begin{align}
+		\rho_k=1-\frac{1}{\lambda+2-k}
+	\end{align}
+	Ez a megoldás használható egy csomópontra, ahol $\lambda - k$ jóval nagyobb egynél, de az eltérés csökken ahogy a $k$ növekszik.
+	\subsection{Helyek felszabadulása}
+	Legyen $V_k$ az esélye annak, hogy az első üres hely a $k$. helyen van  
+	\begin{align}
+		V_k=\left\langle\prod_{j=1}^{k-1}\sigma_j(1-\sigma_k)\right\rangle
+	\end{align}
+	ami, csonkítással a következőt adja
+	\begin{align}
+		V_k=\epsilon n_k\prod_{j=1}^{k-1}\rho_j
+	\end{align}
+	Ha vesszük a logaritmusát, kicserélve az összeget integrálra és felhasználva $\rho_k=1-\frac{1}{\lambda+2-k}$ azt kapjuk, hogy 
+	\begin{align}
+		\sum_{j=1}^{k-1}\ln\rho_j\simeq\int_{1}^{k}dj\ln\left(1-\frac{1}{\lambda+2-k}\right)\simeq-\int_{1}^{k}\frac{dj}{\lambda+2-j}=\ln\frac{\lambda+2-k}{\lambda+1}
+	\end{align}
+	Összehasonlítva a (\ref{eq7})-val
+	\begin{align}
+		\prod_{j=1}^{k-1}\rho_j \simeq \frac{1}{n_k}
+	\end{align}
+	Tehát az első üresedés esélye egyenletesen eloszlik $[0,\lambda]$ tartományon
+	\begin{align}
+		V_k=
+		\begin{cases}
+			\epsilon &\quad k < \lambda \\
+			0 &\quad k > \lambda
+		\end{cases}
+	\end{align}
+	amiből az átlag elhelyezkedése az első üres helynek a következő:
+	\begin{align}
+		v_1 \equiv \langle k \rangle = \sum_{k=1}^{\lambda}kV_k=\frac{\lambda}{2}
+	\end{align}
+	\section{A körültekintő stratégia}
+	A több dimenzióssága
+	\todo{jobb fordítás a many-body-ra}
+	a parkolásnak bonyolultabb a körültekintő stratégiának. Kiemelkedő jellemzője ennek a stratégiának, hogy sok üres hely van közel a célhoz, ugyanis az érkező autók a legjobboldalibb helyet foglalják el, így a közelebbi helyek üresen maradnak.\\
+	Mind a bizakodó, mind a körültekintő stratégia esetén az átlag hossza $L$ a folytonosan lefoglalt parkolóhelyeknek aszimptotikus viselkedést mutat $L \simeq\lambda+a\lambda^{1/2}$, pontosabban
+	\begin{align}
+		\lim\limits_{\lambda \to \infty}\frac{L-\lambda}{\sqrt{\lambda}}=a
+	\end{align}
+	Az amplitúdó $a>0$ nagyobb a körültekintő stratégia esetén. A fenti egyenlet szerint az üres helyek száma $a\sqrt{\lambda}$ ként nö. Tehát mind a bizakodó, mind a körültekintő stratégia hatékonynak mondható mivel nagy forgalom esetén kevés a szabad hely.
+\end{document}
